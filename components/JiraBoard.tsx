@@ -4,10 +4,10 @@ import Modal from './Modal';
 import { PlusIcon, TrashIcon } from './icons';
 
 const initialTasks: JiraTask[] = [
-  { id: '1', title: 'Design Landing Page', description: 'Create mockups in Figma', status: JiraStatus.ToDo },
-  { id: '2', title: 'Develop API Endpoints', description: 'User authentication and data fetching', status: JiraStatus.InProgress },
-  { id: '3', title: 'Setup CI/CD Pipeline', description: 'Integrate with GitHub Actions', status: JiraStatus.Done },
-  { id: '4', title: 'Write User Documentation', description: 'Cover all features and use cases', status: JiraStatus.ToDo },
+  { id: 'ZEN-1', title: 'Design Landing Page', description: 'Create mockups in Figma', status: JiraStatus.ToDo },
+  { id: 'ZEN-2', title: 'Develop API Endpoints', description: 'User authentication and data fetching', status: JiraStatus.InProgress },
+  { id: 'ZEN-3', title: 'Setup CI/CD Pipeline', description: 'Integrate with GitHub Actions', status: JiraStatus.Done },
+  { id: 'ZEN-4', title: 'Write User Documentation', description: 'Cover all features and use cases', status: JiraStatus.ToDo },
 ];
 
 const JiraColumn: React.FC<{
@@ -50,6 +50,9 @@ const JiraColumn: React.FC<{
               </button>
             </div>
             <p className="text-sm text-text-secondary mt-1">{task.description}</p>
+            <div className="mt-3 text-right">
+              <span className="text-xs text-text-secondary font-mono bg-primary px-1.5 py-0.5 rounded">{task.id}</span>
+            </div>
           </div>
         ))}
       </div>
@@ -86,8 +89,13 @@ const JiraBoard: React.FC = () => {
 
   const handleAddTask = () => {
     if (newTaskTitle.trim() === '') return;
+
+    const taskNumbers = tasks.map(t => parseInt(t.id.split('-')[1] || '0', 10)).filter(n => !isNaN(n));
+    const newIdNumber = (taskNumbers.length > 0 ? Math.max(...taskNumbers) : 0) + 1;
+    const newId = `ZEN-${newIdNumber}`;
+
     const newTask: JiraTask = {
-      id: Date.now().toString(),
+      id: newId,
       title: newTaskTitle,
       description: newTaskDesc,
       status: JiraStatus.ToDo,
